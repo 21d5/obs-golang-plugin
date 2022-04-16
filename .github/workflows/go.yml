@@ -15,15 +15,9 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '^1.18'
-      - name: Install OBS
-        shell: pwsh
-        run: |
-          Invoke-WebRequest -Uri "https://cdn-fastly.obsproject.com/downloads/OBS-Studio-27.2.4-Full-Installer-x64.exe" -OutFile obs-studio-installer.exe
-          .\obs-studio-installer.exe /S | Out-Null
       - name: Build
         shell: pwsh
         run: |
-          Copy-Item "C:\\Program Files\\obs-studio\\bin\\64bit\\obs.dll" -Destination "."
           go build -buildmode=c-shared -o obs-studio-plugin.dll
       - name: Archive artifact
         uses: actions/upload-artifact@v2
