@@ -39,79 +39,79 @@ package main
 // extern void hide(uintptr_t data);
 import "C"
 import (
-	"runtime/cgo"
-	"unsafe"
+    "runtime/cgo"
+    "unsafe"
 )
 
 type ctx struct {
-	source   *C.obs_source_t
-	settings *C.obs_data_t
+    source   *C.obs_source_t
+    settings *C.obs_data_t
 }
 
 var obsModulePointer *C.obs_module_t
 
 //export obs_module_set_pointer
 func obs_module_set_pointer(module *C.obs_module_t) {
-	obsModulePointer = module
+    obsModulePointer = module
 }
 
 //export obs_current_module
 func obs_current_module() *C.obs_module_t {
-	return obsModulePointer
+    return obsModulePointer
 }
 
 //export obs_module_ver
 func obs_module_ver() C.uint32_t {
-	return C.LIBOBS_API_VER
+    return C.LIBOBS_API_VER
 }
 
 var obs_plugin_id *C.char = C.CString("obs-golang-plugin")
 
 var source = C.struct_obs_source_info{
-	id:           obs_plugin_id,
-	_type:        C.OBS_SOURCE_TYPE_INPUT,
-	output_flags: C.OBS_SOURCE_ASYNC_VIDEO | C.OBS_SOURCE_AUDIO | C.OBS_SOURCE_DO_NOT_DUPLICATE,
+    id:           obs_plugin_id,
+    _type:        C.OBS_SOURCE_TYPE_INPUT,
+    output_flags: C.OBS_SOURCE_ASYNC_VIDEO | C.OBS_SOURCE_AUDIO | C.OBS_SOURCE_DO_NOT_DUPLICATE,
 
-	get_name: C.get_name_t(unsafe.Pointer(C.get_name)),
-	create:   C.create_t(unsafe.Pointer(C.create)),
-	destroy:  C.destroy_t(unsafe.Pointer(C.destroy)),
+    get_name: C.get_name_t(unsafe.Pointer(C.get_name)),
+    create:   C.create_t(unsafe.Pointer(C.create)),
+    destroy:  C.destroy_t(unsafe.Pointer(C.destroy)),
 
-	get_properties: C.get_properties_t(unsafe.Pointer(C.get_properties)),
-	get_defaults:   C.get_defaults_t(unsafe.Pointer(C.get_defaults)),
-	video_render:   C.video_render_t(unsafe.Pointer(C.video_render)),
-	get_width:      C.get_width_t(unsafe.Pointer(C.get_width)),
-	get_height:     C.get_height_t(unsafe.Pointer(C.get_height)),
-	update:         C.update_t(unsafe.Pointer(C.update)),
-	show:           C.show_t(unsafe.Pointer(C.show)),
-	hide:           C.hide_t(unsafe.Pointer(C.hide)),
+    get_properties: C.get_properties_t(unsafe.Pointer(C.get_properties)),
+    get_defaults:   C.get_defaults_t(unsafe.Pointer(C.get_defaults)),
+    video_render:   C.video_render_t(unsafe.Pointer(C.video_render)),
+    get_width:      C.get_width_t(unsafe.Pointer(C.get_width)),
+    get_height:     C.get_height_t(unsafe.Pointer(C.get_height)),
+    update:         C.update_t(unsafe.Pointer(C.update)),
+    show:           C.show_t(unsafe.Pointer(C.show)),
+    hide:           C.hide_t(unsafe.Pointer(C.hide)),
 }
 
 var obs_plugin_name *C.char = C.CString("OBS Golang Plugin")
 
 //export get_name
 func get_name(typeData C.uintptr_t) *C.char {
-	return obs_plugin_name
+    return obs_plugin_name
 }
 
 //export create
 func create(settings *C.obs_data_t, source *C.obs_source_t) C.uintptr_t {
-	ctx := ctx{
-		source:   source,
-		settings: settings,
-	}
+    ctx := ctx{
+        source:   source,
+        settings: settings,
+    }
 
-	return C.uintptr_t(cgo.NewHandle(ctx))
+    return C.uintptr_t(cgo.NewHandle(ctx))
 }
 
 //export destroy
 func destroy(data C.uintptr_t) {
-	cgo.Handle(data).Delete()
+    cgo.Handle(data).Delete()
 }
 
 //export get_properties
 func get_properties(data C.uintptr_t) *C.obs_properties_t {
-	properties := C.obs_properties_create()
-	return properties
+    properties := C.obs_properties_create()
+    return properties
 }
 
 //export get_defaults
@@ -121,20 +121,20 @@ func get_defaults(settings *C.obs_data_t) {
 
 //export video_render
 func video_render(data C.uintptr_t, effect *C.gs_effect_t) {
-	ctx := cgo.Handle(data).Value().(ctx)
+    ctx := cgo.Handle(data).Value().(ctx)
 
-	// do something with ctx
-	_ = ctx
+    // do something with ctx
+    _ = ctx
 }
 
 //export get_width
 func get_width(data C.uintptr_t) C.uint32_t {
-	return 0
+    return 0
 }
 
 //export get_height
 func get_height(data C.uintptr_t) C.uint32_t {
-	return 0
+    return 0
 }
 
 //export update
@@ -154,9 +154,9 @@ func hide(data C.uintptr_t) {
 
 //export obs_module_load
 func obs_module_load() C.bool {
-	C.obs_register_source_s(&source, C.sizeof_struct_obs_source_info)
+    C.obs_register_source_s(&source, C.sizeof_struct_obs_source_info)
 
-	return true
+    return true
 }
 
 func main() {}
