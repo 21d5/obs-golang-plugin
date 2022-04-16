@@ -1,8 +1,8 @@
 package main
 
-// #cgo pkg-config: libobs
+// #cgo CFLAGS: -Ithird_party/obs-studio/libobs
 //
-// #include <obs/obs-module.h>
+// #include <obs-module.h>
 //
 // typedef char* (*get_name_t)(uintptr_t type_data);
 // extern char* get_name(uintptr_t type_data);
