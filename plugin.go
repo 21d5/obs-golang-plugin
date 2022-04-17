@@ -43,6 +43,7 @@ import (
     "unsafe"
 
     "flag"
+    "log"
     "net/http"
 
     "github.com/prometheus/client_golang/prometheus/promhttp"
@@ -157,15 +158,18 @@ func hide(data C.uintptr_t) {
 
 }
 
+var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
 //export obs_module_load
 func obs_module_load() C.bool {
     C.obs_register_source_s(&source, C.sizeof_struct_obs_source_info)
 
+
+    flag.Parse()
     http.Handle("/metrics", promhttp.Handler())
-    http.ListenAndServe(":2112", nil)
+    log.Fatal(http.ListenAndServe(*addr, nil))
+
     return true
 }
 
-var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
 
 func main() {}
