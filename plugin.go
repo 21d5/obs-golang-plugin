@@ -162,13 +162,11 @@ func hide(data C.uintptr_t) {
 func obs_module_load() C.bool {
     C.obs_register_source_s(&source, C.sizeof_struct_obs_source_info)
 
+    http.Handle("/metrics", promhttp.Handler())
+    http.ListenAndServe(":2112", nil)
     return true
 }
 
 var addr = flag.String("listen-address", ":8080", "The address to listen on for HTTP requests.")
 
-func main() {
-    flag.Parse()
-    http.Handle("/metrics", promhttp.Handler())
-    log.Fatal(http.ListenAndServe(*addr, nil))
-}
+func main() {}
