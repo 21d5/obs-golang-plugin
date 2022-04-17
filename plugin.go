@@ -42,6 +42,7 @@ import (
     "runtime/cgo"
     "unsafe"
 
+    "flag"
     "net/http"
 
     "github.com/prometheus/client_golang/prometheus/promhttp"
